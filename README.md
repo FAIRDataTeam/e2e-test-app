@@ -1,40 +1,63 @@
-# FAIR Data Point Client
+# E2E Test App
 
-> Client application for the [FAIR Data Point](https://github.com/FAIRDataTeam/FAIRDataPoint) providing a user interface for browsing the metadata and administration.
 
-[![Build Status](https://travis-ci.org/FAIRDataTeam/FAIRDataPoint-client.svg?branch=master)](https://travis-ci.org/FAIRDataTeam/FAIRDataPoint-client.svg?branch=master)
+[![Build Status](https://travis-ci.org/FAIRDataTeam/e2e-test-app.svg?branch=master)](https://travis-ci.org/FAIRDataTeam/FAIRDataPoint-client.svg?branch=master)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
+A simple UI for running customized [FAIRDataPoint E2E Tests](https://github.com/FAIRDataTeam/FAIRDataPoint-E2E-Tests) in Travis. It allows to choosing custom Docker Images for the [FAIRDataPoint](https://github.com/FAIRDataTeam/FAIRDataPoint), [FAIRDataPoint-client](https://github.com/FAIRDataTeam/FAIRDataPoint-client) and [OpenRefine-metadata-extension](https://github.com/FAIRDataTeam/OpenRefine-metadata-extension) which the E2E tests should run against.
 
-[Documentation](https://fairdatapoint.readthedocs.io/) explains how to install, configure and use the FAIR Data Point.
+## Configuration
 
+Create a `.htpasswd` file with usernames and passwords and mount it to `/usr/share/nginx/.htpasswd` for basic auth.
 
-## Development
+Create a `config.js` file and mount it to `/usr/share/nginx/html/config.js`.
 
-Install dependencies using:
+Example configuration file:
 
+```js
+window.config = {
+  // GitHub repository with the tests
+  repository: 'FAIRDataTeam/FAIRDataPoint-E2E-Tests',
+  
+  // Repository ID used for Travis API calls
+  travisRepoId: '12345678',
+  
+  // Travis token for API calls
+  travisToken: 'abcdefghijklmnop',
+
+  // Private Docker registry host if you use it (optional)
+  privateDockerHost: 'registry.example.com',
+
+  // Private Docker registry auth token (optional)
+  privateDockerAuthToken: 'dXNlcjpwYXNzd29yZA==',
+
+  // Configuration of repositories for images used in E2E tests
+  repositories: [{
+    // Name of the repository
+    name: 'FAIR Data Point',
+
+    // Image name in the public Docker Hub (optional)
+    public: 'fairdata/fairdatapoint',
+    
+    // Image name in the private Docker Hub (optional)
+    private: 'registry.example.com/fairdatapoint',
+    
+    // ENV variable that will be set for the E2E tests Travis build
+    env: 'SERVER_IMAGE',
+  }, {
+    public: 'fairdata/fairdatapoint-client',
+    env: 'CLIENT_IMAGE',
+  }, {
+    public: 'fairdata/openrefine-metadata-extension',
+    env: 'OPEN_REFINE_IMAGE',
+  }],
+}
 ```
-$ npm install
-```
 
-Compile and hot-reload for development:
+You need to configure the Travis repository where the actual E2E tests are and token for Travis API calls.
 
-```
-npm run serve
-```
+You can also configure private Docker registry if you use one. Then, for each repository you can configure `public`, `private` or both image names in `repositories` section.
 
-Compile and minify for production:
-
-```
-$ npm run build
-```
-
-Run tests or linter:
-
-```
-$ npm run test
-$ npm run lint
-```
 
 ## License
 

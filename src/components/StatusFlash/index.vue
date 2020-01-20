@@ -1,16 +1,14 @@
 <template>
-  <div class="status-flash">
-    <div
-      v-if="!status.isDefault()"
-      :class="{
-        'loader': status.isPending() && !noLoading,
-        'status-flash__alert status-flash__alert--danger': status.isError(),
-        'status-flash__alert status-flash__alert--success': status.isSuccess()
-      }"
+  <div>
+    <b-alert
+      :variant="variant"
+      :show="!status.isDefault()"
+      :dismissible="status.isError() || status.isSuccess()"
+      fade
     >
       <template v-if="status.isPending() && !noLoading">
         <fa
-          :icon="['fas', 'spinner']"
+          :icon="['fas', 'circle-notch']"
           spin
         />
         Loading...
@@ -18,12 +16,12 @@
       <template v-if="status.message">
         {{ status.message }}
       </template>
-    </div>
+    </b-alert>
   </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import Status from '../../utils/Status'
+import Status from '@/utils/Status'
 
 @Component
 export default class StatusFlash extends Vue {
@@ -32,5 +30,21 @@ export default class StatusFlash extends Vue {
 
   @Prop({ type: Boolean, default: false })
   readonly noLoading: boolean
+
+  get variant() {
+    if (this.status.isError()) {
+      return 'danger'
+    }
+
+    if (this.status.isSuccess()) {
+      return 'success'
+    }
+
+    if (this.status.isPending()) {
+      return 'light'
+    }
+
+    return ''
+  }
 }
 </script>

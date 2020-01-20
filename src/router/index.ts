@@ -1,13 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Repository from '../views/Repository/index.vue'
-import NotFound from '../views/NotFound/index.vue'
+import Repository from '@/views/Repository/index.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   { path: '/', component: Repository },
-  { path: '*', component: NotFound },
+  { path: '*', redirect: '/' },
 ]
 
 const router = new VueRouter({

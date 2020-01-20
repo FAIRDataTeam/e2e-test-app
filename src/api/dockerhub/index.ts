@@ -3,7 +3,7 @@ import config from '@/utils/config'
 
 
 const request = axios.create({
-  baseURL: config.githubUrl,
+  baseURL: config.dockerhubUrl,
   headers: {
     Accept: 'application/json',
   },
@@ -11,7 +11,7 @@ const request = axios.create({
 
 
 export default {
-  getBranches(repository: string) {
-    return request.get(`/repos/${repository}/branches`)
+  getTags(name: string) {
+    return request.get(`/repositories/${name}/tags`)
   },
 }
