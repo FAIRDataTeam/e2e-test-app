@@ -6,9 +6,10 @@ import * as fab from '@fortawesome/free-brands-svg-icons'
 
 // @ts-ignore
 library.add(fab.faDocker)
-library.add(fas.faExternalLinkAlt)
+library.add(fas.faCopyright)
 library.add(fas.faKey)
 library.add(fas.faPlay)
+library.add(fas.faPlayCircle)
 library.add(fas.faCircleNotch)
 
 Vue.component('fa', FontAwesomeIcon)

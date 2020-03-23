@@ -10,17 +10,23 @@
       <b-col
         cols="12"
         md="6"
-        class="travis-link"
+        class="links"
       >
         <a
-          :href="`https://travis-ci.org/${repository}`"
+          :href="`https://github.com/${repository}/actions`"
           class="mr-3"
           target="_blank"
         >
-          {{ repository }}
-          <sup>
-            <fa :icon="['fas', 'external-link-alt']" />
-          </sup>
+          <fa :icon="['fas', 'play-circle']" />
+          GitHub Actions
+        </a>
+        <a
+          :href="`https://dashboard.cypress.io/projects/${cypressProjectId}/runs`"
+          class="mr-3"
+          target="_blank"
+        >
+          <fa :icon="['fas', 'copyright']" />
+          Cypress Dashboard
         </a>
       </b-col>
     </b-row>
@@ -160,6 +166,10 @@ export default class Repository extends Vue {
     return config.repository
   }
 
+  get cypressProjectId(): string {
+    return config.cypressProjectId
+  }
+
   async submit() {
     try {
       this.status.setPending()
@@ -169,8 +179,10 @@ export default class Repository extends Vue {
       })
       localStorage.setSelectedBranch(this.selectedBranch)
 
-      const env = this.repositories.map(r => `${r.env}="${r.value}"`).join(' ')
-      await api.travis.triggerBuild(config.travisRepoId, this.selectedBranch, env)
+      const testTarget = this.repositories.map(r => `${r.shortName} ${this.parseTag(r.value)}`).join(', ')
+      const event = `Test (${testTarget})`
+      const payload = this.repositories.reduce((acc, r) => ({ [r.env]: r.value, ...acc }), {})
+      await api.github.triggerBuild(event, payload)
 
       this.status.setDone('Build has been started!')
     } catch (error) {
@@ -227,6 +239,10 @@ export default class Repository extends Vue {
     return _.get(response, 'data.tags', [])
       .filter(t => !t.match(/^([0-9a-f]{40}|master|develop|v\d\.\d\.\d.*|release-.+)$/))
       .sort()
+  }
+
+  parseTag(value: string): string {
+    return _.last(value.split(':'))
   }
 }
 </script>
