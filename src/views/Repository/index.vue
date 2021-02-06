@@ -180,10 +180,8 @@ export default class Repository extends Vue {
       localStorage.setSelectedBranch(this.selectedBranch)
 
       const ref = this.selectedBranch
-      const testTarget = this.repositories.map(r => `${r.shortName} ${this.parseTag(r.value)}`).join(', ')
-      const event = `Test (${testTarget})`
       const inputs = this.repositories.reduce((acc, r) => ({ [r.env]: r.value, ...acc }), {})
-      await api.github.triggerBuild(event, ref, inputs)
+      await api.github.triggerBuild(ref, inputs)
 
       this.status.setDone('Build has been started!')
     } catch (error) {
