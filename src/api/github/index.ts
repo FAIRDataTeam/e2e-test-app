@@ -12,8 +12,8 @@ const request = axios.create({
 request.interceptors.request.use((oldConfig) => {
   const newConfig = { ...oldConfig }
 
-  if (config.token) {
-    newConfig.headers.common.Authorization = `token ${config.token}`
+  if (config.githubToken) {
+    newConfig.headers.common.Authorization = `token ${config.githubToken}`
   }
 
   return newConfig
@@ -21,14 +21,17 @@ request.interceptors.request.use((oldConfig) => {
 
 
 export default {
-  getBranches(repository: string) {
-    return request.get(`/repos/${repository}/branches`)
+  getBranches() {
+    return request.get(`/repos/${config.githubRepo}/branches`)
   },
 
-  triggerBuild(event: string, payload: object) {
-    return request.post(`/repos/${config.repository}/dispatches`, {
+  triggerBuild(event: string, ref: string, inputs: object) {
+    return request.post(`/repos/${config.githubRepo}/actions/workflows/${config.githubWorkflowId}/dispatches`, {
       event_type: event,
-      client_payload: payload,
+      client_payload: {
+        ref,
+        inputs,
+      },
     }, {
       headers: {
         Accept: 'application/vnd.github.everest-preview+json',

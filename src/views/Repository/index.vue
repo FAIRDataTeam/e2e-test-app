@@ -163,7 +163,7 @@ export default class Repository extends Vue {
   }
 
   get repository(): string {
-    return config.repository
+    return config.githubRepo
   }
 
   get cypressProjectId(): string {
@@ -179,10 +179,11 @@ export default class Repository extends Vue {
       })
       localStorage.setSelectedBranch(this.selectedBranch)
 
+      const ref = this.selectedBranch
       const testTarget = this.repositories.map(r => `${r.shortName} ${this.parseTag(r.value)}`).join(', ')
       const event = `Test (${testTarget})`
-      const payload = this.repositories.reduce((acc, r) => ({ [r.env]: r.value, ...acc }), {})
-      await api.github.triggerBuild(event, payload)
+      const inputs = this.repositories.reduce((acc, r) => ({ [r.env]: r.value, ...acc }), {})
+      await api.github.triggerBuild(event, ref, inputs)
 
       this.status.setDone('Build has been started!')
     } catch (error) {
@@ -194,7 +195,7 @@ export default class Repository extends Vue {
     try {
       this.status.setPending()
       this.selectedBranch = localStorage.getSelectedBranch()
-      const branchesResponse = await api.github.getBranches(this.repository)
+      const branchesResponse = await api.github.getBranches()
       this.branches = branchesResponse.data.map(b => b.name)
 
       const responses = await axios.all(config.repositories.flatMap(r => ([

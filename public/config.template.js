@@ -1,9 +1,13 @@
 window.config = {
-  travisRepo: '...',
-  travisRepoId: '...',
-  travisToken: '...',
+  githubRepo: '...',
+  githubToken: '...',
+  githubWorkflowId: '...',
+  githubUrl: '...',
   repositories: [{
     name: '...',
+    shortName: '...',
+    public: '...',
+    private: '...',
     env: '...',
   }],
 }

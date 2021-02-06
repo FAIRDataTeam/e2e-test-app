@@ -21,19 +21,15 @@ class Config {
 
   privateDockerAuthToken: string
 
-  repository: string
+  githubRepo: string
 
-  token: string
+  githubToken: string
+
+  githubWorkflowId: string
 
   githubUrl: string
 
   cypressProjectId: string
-
-  travisUrl: string
-
-  travisRepoId: string
-
-  travisToken: string
 
   repositories: Array<Repository>
 }
@@ -44,14 +40,11 @@ function loadConfig(): Config {
   config.dockerhubUrl = _.get(window, 'config.dockerhubUrl', '/dockerhub')
   config.privateDockerHost = _.get(window, 'config.privateDockerHost')
   config.privateDockerAuthToken = _.get(window, 'config.privateDockerAuthToken')
-  config.repository = _.get(window, 'config.repository')
-  config.token = _.get(window, 'config.token')
+  config.githubRepo = _.get(window, 'config.githubRepo')
+  config.githubToken = _.get(window, 'config.githubToken')
+  config.githubWorkflowId = _.get(window, 'config.githubWorkflowId')
   config.githubUrl = _.get(window, 'config.githubUrl', 'https://api.github.com')
   config.cypressProjectId = _.get(window, 'config.cypressProjectId')
-  config.travisUrl = _.get(window, 'config.travisUrl', 'https://api.travis-ci.org')
-  config.travisRepoId = _.get(window, 'config.travisRepoId')
-  config.travisToken = _.get(window, 'config.travisToken')
-  config.travisToken = _.get(window, 'config.travisToken')
   config.repositories = _.get(window, 'config.repositories', []).map((rConfig) => {
     const repository = new Repository()
     repository.name = _.get(rConfig, 'name')
