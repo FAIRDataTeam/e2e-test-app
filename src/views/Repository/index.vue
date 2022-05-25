@@ -236,7 +236,7 @@ export default class Repository extends Vue {
 
   createPrivateTagsFromResponse(response): Array<string> {
     return _.get(response, 'data.tags', [])
-      .filter(t => !t.match(/^([0-9a-f]{40}|master|develop|v\d\.\d\.\d.*|release-.+)$/))
+      .filter(t => !t.match(/^([0-9a-f]{40}|master|v\d\.\d\.\d.*|release-.+)$/))
       .sort()
   }
 
